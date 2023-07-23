@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,19 @@ builder.Services.AddAuthentication(defaultScheme: CookieAuthenticationDefaults.A
 
         config.LoginPath = "/Account/Login";
         config.AccessDeniedPath = "/AccessDenied";
+    })
+    .AddGoogle("Google", config =>
+    {
+        config.ClientId = "898444421934-j3819skn5fuutcovg37d8phs6saosmov.apps.googleusercontent.com";
+        config.ClientSecret = "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";
+
+        //config.CallbackPath = "/signin-google"; // default
+        //config.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme // default
+
+        config.Events = new OAuthEvents
+        {
+            //OnCreatingTicket = 
+        };
     });
 
 builder.Services.AddAuthorization(options =>
@@ -26,8 +40,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("CheckUserClaims", policy =>
     {
         policy.RequireAuthenticatedUser();
-        policy.RequireRole("Admin");
-        policy.RequireClaim("sub", "124");
+        //policy.RequireRole("Admin");
+        //policy.RequireClaim("sub", "124");
     });
 });
 
