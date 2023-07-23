@@ -21,6 +21,7 @@ builder.Services.AddAuthentication(defaultScheme: CookieAuthenticationDefaults.A
         config.LoginPath = "/Account/Login";
         config.AccessDeniedPath = "/AccessDenied";
     })
+    .AddCookie("temp")
     .AddGoogle("Google", config =>
     {
         config.ClientId = "898444421934-j3819skn5fuutcovg37d8phs6saosmov.apps.googleusercontent.com";
@@ -28,6 +29,7 @@ builder.Services.AddAuthentication(defaultScheme: CookieAuthenticationDefaults.A
 
         //config.CallbackPath = "/signin-google"; // default
         //config.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme // default
+        config.SignInScheme = "temp";
 
         config.Events = new OAuthEvents
         {

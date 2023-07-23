@@ -48,8 +48,6 @@ public class LoginModel : PageModel
 
             await HttpContext.SignInAsync(cp, prop);
 
-            var user = HttpContext.User;
-
             return LocalRedirect(ReturnUrl ?? "/");
         }
 

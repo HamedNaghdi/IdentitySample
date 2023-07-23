@@ -15,7 +15,13 @@ namespace Web.Pages
 
             var props = new AuthenticationProperties
             {
-                RedirectUri = ReturnUrl,
+                RedirectUri = Url.Page("/Callback"),
+
+                Items =
+                {
+                    {"UltimateReturnUrl", ReturnUrl },
+                    {"scheme", "Google" },
+                }
             };
 
             return Challenge(props, "Google");
