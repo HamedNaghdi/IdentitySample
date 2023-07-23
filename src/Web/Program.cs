@@ -1,4 +1,35 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Authentications
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
+//        options => builder.Configuration.Bind("JwtSettings", options))
+//    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+//        options => builder.Configuration.Bind("CookieSettings", options));
+builder.Services.AddAuthentication(defaultScheme: CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(authenticationScheme: CookieAuthenticationDefaults.AuthenticationScheme,
+    configureOptions: config =>
+    {
+        config.Cookie.Name = "demo";
+        config.ExpireTimeSpan = TimeSpan.FromHours(8);
+        config.SlidingExpiration = true;
+
+        config.LoginPath = "/Account/Login";
+        config.AccessDeniedPath = "/AccessDenied";
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("CheckUserClaims", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("Admin");
+        policy.RequireClaim("sub", "124");
+    });
+});
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -18,6 +49,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
